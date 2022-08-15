@@ -114,24 +114,43 @@ Address.is.collectionAddress([]) // false
 
 #### nestingAddress
 
-This method checks whether a specified NFT has any items inside.
+This method checks whether an address is a valid nesting address (input address capitalization doesn't matter).
 
-``` ts 
-Address.is.nestingAddress('5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ')
-// result = false
+```ts
+nestingAddress: (address: string) => boolean
 ```
 
-#### [collectionId]()
+Examples:
+``` ts 
+Address.is.nestingAddress('0xF8238Ccfff8Ed887463Fd5E00000007f000000fe') // true
+Address.is.nestingAddress('0xf8238ccfff8ed887463fd5e00000007f000000fe') // true
+Address.is.nestingAddress('0x17C4e6453cC49AAaaEaCA894E6D9683e00000001')  // false
+Address.is.nestingAddress('0x34055awqa8cd2a82b656a3605ab058fb25e943a')   // false
+Address.is.nestingAddress('123') // false
+Address.is.nestingAddress('5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ') // false
+Address.is.nestingAddress([]) // false
+```
 
-This method checks whether the specified number can be a collection Id.
+#### collectionId
+
+This method checks whether the specified number looks like a valid collection id.
+
+```ts
+collectionId: (collectionId: number) => boolean
+```
+
+Examples:
 
 ``` ts 
-Address.is.collectionId(101)
-// result = true
-Address.is.collectionId(-5)
-// result = false
-Address.is.collectionId('id')
-// result = false
+Address.is.collectionId(1) // true
+Address.is.collectionId(101) // true
+Address.is.collectionId(0xffffffff) // true
+Address.is.collectionId(0) // false
+Address.is.collectionId(0xffffffff + 1) // false (out of range [1, 0xffffffff])
+Address.is.collectionId(-5) // false
+Address.is.collectionId('id') // false
+Address.is.collectionId('0x17c4e6453cc49aaaaeaca894e6d9683e00000001') // false // for this case please refer to Address.is.collectionAddress
+Address.is.collectionId([]) // false
 ```
 
 #### [tokenId]()
@@ -315,22 +334,26 @@ The object provides methods for converting addresses Substrate and Ethereum addr
 
 #### crossAccountId
 
-The method accepts a Substrate or Ethereum address as a parameter and converts it to an object.
+The method accepts a Substrate or Ethereum address as a parameter and converts it to a Cross Account Id object.
 If a parameter is invalid, the method throws the exception.
 
+```ts
+crossAccountId: (address: string) => CrossAccountId 
+```
+
+Examples:
+
 ``` ts
-try {
-  const result = Address.to.crossAccountId(100)
-} catch (e) {
-  console.log(e.message)
-}
-// output: Passed address 100 is not substrate nor ethereum address
+Address.to.crossAccountId('0x17c4E6453Cc49AAAaEACa894E6a9683e00000005')
+// { Ethereum: '0x17c4E6453Cc49AAAaEACa894E6a9683e00000005' }
 
-const result = Address.to.crossAccountId('0x17c4E6453Cc49AAAaEACa894E6a9683e00000005')
-const result2 = Address.to.crossAccountId('5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ')
-// result1 = { Ethereum: '0x17c4E6453Cc49AAAaEACa894E6a9683e00000005' }
-// result2 = { Substrate: '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ' }
+Address.to.crossAccountId('5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ')
+// { Substrate: '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ' }
 
+Address.to.crossAccountId('5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJ') // throws
+Address.to.crossAccountId('0x17c4E6453Cc49AAAaEACa894E6a9683e0000000') // throws
+Address.to.crossAccountId(100) // throws
+Address.to.crossAccountId([])  // throws
 ```
 
 #### crossAccountIdNormalized
