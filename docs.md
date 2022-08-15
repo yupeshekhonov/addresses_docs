@@ -50,7 +50,7 @@ CollectionHelpers and ContractHelpers smart contracts addresses:
 Address.constants.STATIC_ADDRESSES.collectionHelpers // '0x6C4E9fE1AE37a41E93CEE429e8E1881aBdcbb54F'
 Address.constants.STATIC_ADDRESSES.contractHelpers   // '0x842899ECF380553E8a4de75bF534cdf6fBF64049'
 ```
-_Note: this addresses are really static, i.e. immutable. They are meant to be same between releases._
+_Note: these addresses are really static, i.e. immutable. They are meant to be same between releases._
 
 ### is
 
@@ -155,7 +155,7 @@ Address.is.collectionId([]) // false
 
 #### tokenId
 
-This method checks whether the specified number is a valid token Id.
+This method checks whether the specified number is a valid token id.
 
 ```ts
 tokenId: (tokenId: number) => boolean
@@ -171,6 +171,117 @@ Address.is.tokenId(-5) //  false
 Address.is.tokenId('id') // false
 Address.is.collectionId('0x17c4e6453cc49aaaaeaca894e6d9683e00000001') // false
 Address.is.tokenId([]]) // false
+```
+
+#### crossAccountId 
+
+This method checks whether a passed argument is a valid Cross Account Id object. 
+
+``` ts
+crossAccountId: (obj: any) => obj is CrossAccountId
+```
+
+Examples: 
+
+``` ts
+Address.is.crossAccountId({ Ethereum: '0x17c4E6453cC49aAaaEACA894e6A9683e00000005' })
+// true
+
+Address.is.crossAccountId({ Substrate: '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ' })
+// true
+
+Address.is.crossAccountId({ Substrate: '5HgvUDiRm5yjRSrrF9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ' })
+// false
+
+Address.is.crossAccountId({ Ethereum: '5HgvUDiRm5yjRSrrF9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ' })
+// false
+
+Address.is.crossAccountId('5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ')
+// false (because it is a string even with a valid address)
+
+Address.is.crossAccountId('5') // false
+Address.is.crossAccountId(110) // false
+Address.is.crossAccountId([]) // false
+``` 
+
+#### crossAccountIdUncapitalized
+
+? 
+
+``` ts
+crossAccountIdUncapitalized: (obj: any) => obj is CrossAccountIdUncapitalized
+```
+
+#### substrateAddressObject
+
+The method checks whether a passed argument is a valid Substrate address object. 
+
+``` ts
+substrateAddressObject: (obj: any) => obj is SubAddressObj
+```
+
+Examples: 
+
+``` ts
+Address.is.substrateAddressObject({ Substrate: '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ' })
+// true
+
+Address.is.substrateAddressObject({ Substrate: 'yGJMj5z32dpBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL' })
+// true
+
+Address.is.substrateAddressObject({ Substrate: '0x17c4E6453Cc49AAAaEACa894E6a9683e00000005' })
+// false
+
+Address.is.substrateAddressObject({ Ethereum: '0x17c4E6453Cc49AAAaEACa894E6a9683e00000005' })
+// false
+
+Address.is.substrateAddressObject('5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ')
+// false
+
+Address.is.substrateAddressObject('address') // false
+Address.is.substrateAddressObject(50) // false
+Address.is.substrateAddressObject([]) // false
+```
+
+#### ethereumAddressObject
+
+The method checks whether a passed argument is a valid Substrate address object.
+
+``` ts
+ethereumAddressObject: (obj: any) => obj is EthAddressObj;
+```
+
+Examples: 
+
+``` ts
+Address.is.ethereumAddressObject({ Ethereum: '0x17c4E6453Cc49AAAaEACa894E6a9683e00000005' })
+// true
+
+Address.is.ethereumAddressObject({ Substrate: '0x17c4E6453Cc49AAAaEACa894E6a9683e00000005' })
+// false
+
+Address.is.ethereumAddressObject('0x17c4E6453Cc49AAAaEACa894E6a9683e00000005')
+// false
+
+Address.is.ethereumAddressObject('address') // false
+Address.is.ethereumAddressObject(5) // false
+Address.is.ethereumAddressObject([]) // false
+```
+
+#### substrateAddressObjectUncapitalized
+
+? 
+
+``` ts
+substrateAddressObjectUncapitalized: (obj: any) => obj is SubAddressObjUncapitalized
+```
+
+#### ethereumAddressObjectUncapitalized
+
+? 
+
+``` ts
+ethereumAddressObjectUncapitalized: (obj: any) => obj is EthAddressObjUncapitalized
 ```
 
 ### validate
@@ -244,7 +355,7 @@ Address.validate.nestingAddress([]) // throws the error
 
 #### collectionId
 
-This method checks whether a number is a token Id. The method returns `true` when this is so, and throws an exception when the validation fails.
+This method checks whether a number is a token id. The method returns `true` when this is so, and throws an error when the validation fails.
 
 ``` ts
 collectionId: (collectionId: number) => boolean
@@ -255,17 +366,17 @@ Examples:
 ``` ts
 Address.validate.collectionId(5) // true
 Address.validate.collectionId(105) // true/
-Address.is.collectionId(0xffffffff) // true
-Address.is.collectionId(0) // throws the error
-Address.is.collectionId(0xffffffff + 1) // throws the error (out of range [1, 0xffffffff])
-Address.is.collectionId(-5) // throws the error
-Address.is.collectionId('id') // throws the error
-Address.is.collectionId([]) // throws the error
+Address.validate.collectionId(0xffffffff) // true
+Address.validate.collectionId(0) // throws the error
+Address.validate.collectionId(0xffffffff + 1) // throws the error (out of range [1, 0xffffffff])
+Address.validate.collectionId(-5) // throws the error
+Address.validate.collectionId('id') // throws the error
+Address.validate.collectionId([]) // throws the error
 ```
 
 #### tokenId
 
-This method checks whether the specified number is a valid token Id. 
+This method checks whether the specified number is a valid token id. 
 
 ``` ts 
 tokenId: (tokenId: number) => boolean
@@ -274,23 +385,23 @@ tokenId: (tokenId: number) => boolean
 Examples: 
 
 ``` ts 
-Address.is.tokenId(11) //  true
-Address.is.tokenId(111) //  true
-Address.is.collectionId(0xffffffff) //  true
-Address.is.tokenId(-5) //  throws the error
-Address.is.tokenId('id') // throws the error
-Address.is.collectionId('0x17c4e6453cc49aaaaeaca894e6d9683e00000001') // throws the error
-Address.is.tokenId([]]) // throws the error
+Address.validate.tokenId(11) //  true
+Address.validate.tokenId(111) //  true
+Address.validate.collectionId(0xffffffff) //  true
+Address.validate.tokenId(-5) //  throws the error
+Address.validate.tokenId('id') // throws the error
+Address.validate.collectionId('0x17c4e6453cc49aaaaeaca894e6d9683e00000001') // throws the error
+Address.validate.tokenId([]]) // throws the error
 ```
 
 
 ### collection
 
-This object provides methods for converting between addresses and Ids of a collection in both directions. The methods works with Ethereum addresses.
+This object provides methods for converting between addresses and Ids of a collection in both directions. The method works with Ethereum addresses.
 
 #### idToAddress
 
-The method gets a collection address by its Id. Returns an address in the Ethereum format if Id is correct, and throws the error if this is not so.
+The method gets a collection address by its id. Returns an address in the Ethereum format if id is correct, and throws the error if this is not so.
 
 ``` ts
 idToAddress: (collectionId: number) => string | null
@@ -309,7 +420,7 @@ Address.collection.idToAddress([]) // throws the error
 
 #### addressToId
 
-The method gets a collection Id by its address. Returns an Id if an address is correct, and throws the error if this is not so.
+The method gets a collection id by its address. Returns an id if an address is correct, and throws the error if this is not so.
 
 ``` ts
 addressToId: (address: string) => number | null 
@@ -385,18 +496,18 @@ Address.nesting.idsToAddress('id',[]) // throws the error
 
 ### to
 
-The object provides methods for converting addresses Substrate and Ethereum address to an object or to a normalized format (prefix 42)
+The object provides methods for converting Substrate or Ethereum address to an object or to a normalized format (prefix 42)
 
 #### crossAccountId
 
 The method accepts a Substrate or Ethereum address as a parameter and converts it to a Cross Account Id object.
-If a parameter is invalid, the method throws the exception.
+If a parameter is invalid, the method throws the error.
 
-```ts
-crossAccountId: (address: string) => CrossAccountId 
+``` ts
+crossAccountId: (address: string) => CrossAccountId
 ```
 
-Examples:
+Examples: 
 
 ``` ts
 Address.to.crossAccountId('0x17c4E6453Cc49AAAaEACa894E6a9683e00000005')
@@ -405,219 +516,382 @@ Address.to.crossAccountId('0x17c4E6453Cc49AAAaEACa894E6a9683e00000005')
 Address.to.crossAccountId('5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ')
 // { Substrate: '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ' }
 
-Address.to.crossAccountId('5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJ') // throws
-Address.to.crossAccountId('0x17c4E6453Cc49AAAaEACa894E6a9683e0000000') // throws
-Address.to.crossAccountId(100) // throws
-Address.to.crossAccountId([])  // throws
+Address.to.crossAccountId('5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJ') // throws the error
+Address.to.crossAccountId('0x17c4E6453Cc49AAAaEACa894E6a9683e0000000') // throws the error
+Address.to.crossAccountId(100) // throws the error
+Address.to.crossAccountId([])  // throws the error
 ```
 
 #### crossAccountIdNormalized
 
-The method accepts a Substrate or Ethereum address as a parameter and converts it to an object with a normalized format (prefix 42).
-If a parameter is invalid, the method throws the exception.
+The method accepts a Substrate or Ethereum address as a parameter and converts it to an object with a normalized format (prefix 42). 
+If a parameter is invalid, the method throws the error.
+
+In case of Substrate address, the method normalizes it (prefix 42). In case of Ethereum address, it capitalizes letters.
 
 ``` ts
-try {
-  const result = Address.to.crossAccountIdNormalized('yGJMj1d32dpBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL')
-  console.log(result)
-} catch (e) {
-  console.log(e.message)
-}
-// output: Passed address yGJMj1d32dpBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL is not substrate nor ethereum address
+crossAccountIdNormalized: (address: string) => CrossAccountId
+```
 
-const result = Address.to.crossAccountIdNormalized('yGJMj5z32dpBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL')
-// result = { Substrate: '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ' }
+Examples:
+
+``` ts
+Address.to.crossAccountIdNormalized('yGJMj5z32dpBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL')
+//{ Substrate: '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ' }
+
+Address.to.crossAccountIdNormalized('0x17c4e6453cc49aaaaeaca894E6a9683e00000005')
+// { Ethereum: '0x17c4E6453cC49aAaaEACA894e6A9683e00000005' }
+
+Address.to.crossAccountIdNormalized('0x17c4E6453Cc49aaaaeaca894e6a9683e000000')
+// throws error 
+
+Address.to.crossAccountIdNormalized('address') // throws error
+Address.to.crossAccountIdNormalized(5) // throws error
+Address.to.crossAccountIdNormalized([]) // throws error
 ```
 
 #### substrateNormalizedOrMirrorIfEthereum
 
-The method returns a normalized address, or mirror if an Ethereum address is passed.
+The method returns a normalized Substrate address, or a Substrate mirror if an Ethereum address is passed.
 
 ``` ts
-try {
-  const result = Address.to.substrateNormalizedOrMirrorIfEthereum('yGJMjes32dpBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL')
-  console.log(result)
-} catch (e) {
-  console.log(e.message)
-}
-// output: Passed address yGJMjes32dpBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL is not substrate nor ethereum address
-
-const result = Address.to.substrateNormalizedOrMirrorIfEthereum('yGJMj5z32dpBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL')
-// result = '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ'
-const result = Address.to.substrateNormalizedOrMirrorIfEthereum('0xf8cC75F76d46c3b1c5F270Fe06c8FFdeAB8E5eaB')
-// result = '5GwWnwbYRzwvcyAmQqCBB4h5JNspv8xPxpUm77wXbooxS3t5'
+substrateNormalizedOrMirrorIfEthereum: (address: string) => string
 ```
 
-## extract
+Examples: 
+
+``` ts
+Address.to.substrateNormalizedOrMirrorIfEthereum('yGJMj5z32dpBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL')
+// '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ'
+
+Address.to.substrateNormalizedOrMirrorIfEthereum('0xf8cC75F76d46c3b1c5F270Fe06c8FFdeAB8E5eaB')
+// '5GwWnwbYRzwvcyAmQqCBB4h5JNspv8xPxpUm77wXbooxS3t5'
+
+Address.to.substrateNormalizedOrMirrorIfEthereum('yGJMjes32dpBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL')
+// throws error 
+
+Address.to.substrateNormalizedOrMirrorIfEthereum('address') // throws the error
+Address.to.substrateNormalizedOrMirrorIfEthereum(55) // throws the error
+Address.to.substrateNormalizedOrMirrorIfEthereum([]) // throws the error
+```
+
+### extract
 
 The object provides methods to get an address from an object.
 
-#### crossAccountIdFromObject
-
-The method accepts an address or an address object, and returns an object with an normalized Address. The method throws an exception if an address is invalid.
-
-``` ts
-try {
-  const result = Address.extract.crossAccountIdFromObject('yGJMj5z32ssBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL')
-  console.log(result)
-} catch (e) {
-  console.log(e.message)}
-// output: Passed address is not a valid address string or object: "yGJMj5z32ssBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL"
-
-const result = Address.extract.crossAccountIdFromObject({ Substrate: 'yGJMj5z32dpBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL' })
-// result = { Substrate: '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ' }
-const result = Address.extract.crossAccountIdFromObject('yGJMj5z32dpBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL')
-// result = { Substrate: '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ' }
-```
-
-#### [crossAccountIdFromObjectNormalized]()
-
-``` ts
-try {
-  const result = Address.extract.crossAccountIdFromObject('yGJMj5z32ssBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL')
-  console.log(result)
-} catch (e) {
-  console.log(e.message)}
-// output: Passed address is not a valid address string or object: "yGJMj5z32ssBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL"
-
-const result = Address.extract.crossAccountIdFromObjectNormalized( '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ')
-// result = { Substrate: '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ' }
-const result = Address.extract.crossAccountIdFromObjectNormalized('yGJMj5z32dpBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL')
-// result = { Substrate: '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ' }
-```
-
 #### normalizedAddressFromObject
 
-The method returns an address (string) in the normalized format from an object or an Address. If a conversion fails, the method throws an exception.
+The method returns an address (string) in the normalized format from an object or an address. If a conversion fails, the method throws an error.
 
-``` ts 
-try {
-  const result = Address.extract.normalizedAddressFromObject('yGJMj5z32dpBUigGVFgatC382Gi3FNVSKyfgi87UF7f786MJL')
-  console.log(result)
-} catch (e) {
-  console.log(e.message)
-}
-// output: Passed address is not a valid address string or object: "yGJMj5z32dpBUigGVFgatC382Gi3FNVSKyfgi87UF7f786MJL"
-
-const result = Address.extract.normalizedAddressFromObject('yGJMj5z32dpBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL')
-// result = '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ'
-const result = Address.extract.normalizedAddressFromObject({ Substrate: 'yGJMj5z32dpBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL' })
-// result = '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ'
+``` ts
+normalizedAddressFromObject: (address: string | object) => string
 ```
 
+Examples: 
+
+``` ts 
+Address.extract.normalizedAddressFromObject('yGJMj5z32dpBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL')
+// '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ'
+
+Address.extract.normalizedAddressFromObject({ Substrate: 'yGJMj5z32dpBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL' })
+// '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ'
+
+Address.extract.normalizedAddressFromObject('0x17c4E6453Cc49aaaaeaca894E6a9683e00000005')
+// '0x17c4E6453cC49aAaaEACA894e6A9683e00000005'
+
+Address.extract.normalizedAddressFromObject({Ethereum: '0x17c4E6453cC49aAaaeaca894e6A9683e00000005'})
+// '0x17c4E6453cC49aAaaEACA894e6A9683e00000005'
+
+Address.extract.normalizedAddressFromObject('yGJMj5z32dpBUigGVFgatC382Gi3FNVSKyfgi87UF7f786MJL')
+// throws the error
+
+Address.extract.normalizedAddressFromObject(11) // throws the error
+Address.extract.normalizedAddressFromObject('511') // throws the error
+Address.extract.normalizedAddressFromObject([]) // throws the error
+```
 
 #### normalizedAddressFromObjectSafe
 
-The method returns an address (string) in the normalized format from an object or an Address. The method does not throw an exception. If conversion fails, a `null` object is returned.
+The method returns an address (string) in the normalized format from an object or an address. The method does not throw an error. If conversion fails, a `null` object is returned.
 
 ``` ts
+normalizedAddressFromObjectSafe: (address: string | object) => string | null
+```
 
-const result = Address.extract.normalizedAddressFromObject('yGJMj5z32dpBUigGVFgatC382Gi3FNVSKyfgi87UF7f786MJL')
-// result = null 
-const result = Address.extract.normalizedAddressFromObject('yGJMj5z32dpBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL')
-// result = '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ'
-const result = Address.extract.normalizedAddressFromObject({ Substrate: 'yGJMj5z32dpBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL' })
-// result = '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ'
+Examples: 
+
+``` ts
+Address.extract.normalizedAddressFromObjectSafe('yGJMj5z32dpBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL')
+// '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ'
+
+Address.extract.normalizedAddressFromObjectSafe({ Substrate: 'yGJMj5z32dpBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL' })
+// '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ'
+
+Address.extract.normalizedAddressFromObjectSafe('0x17c4E6453Cc49aaaaeaca894E6a9683e00000005')
+// '0x17c4E6453cC49aAaaEACA894e6A9683e00000005'
+
+Address.extract.normalizedAddressFromObjectSafe({Ethereum: '0x17c4E6453cC49aAaaeaca894e6A9683e00000005'})
+// '0x17c4E6453cC49aAaaEACA894e6A9683e00000005'
+
+Address.extract.normalizedAddressFromObjectSafe('yGJMj5z32dpBUigGVFgatC382Gi3FNVSKyfgi87UF7f786MJL')
+// null 
+
+Address.extract.normalizedAddressFromObjectSafe(50) // null 
+Address.extract.normalizedAddressFromObjectSafe('id') // null 
+Address.extract.normalizedAddressFromObjectSafe([]) // null 
+```
+
+#### crossAccountIdFromObject
+
+The method accepts an address or an address object, and converts it to a Cross Account Id object. The method throws an error if an address is invalid.
+
+``` ts
+crossAccountIdFromObject: (obj: any) => CrossAccountId
+``` 
+
+Examples: 
+
+``` ts
+Address.extract.crossAccountIdFromObject({ Substrate: 'yGJMj5z32dpBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL' })
+// { Substrate: '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ' }
+
+Address.extract.crossAccountIdFromObject('yGJMj5z32dpBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL')
+// { Substrate: '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ' }
+
+Address.extract.crossAccountIdFromObject({Ethereum: '0x17c4E6453cC49aAaaeaca894e6A9683e00000005'})
+// { Ethereum: '0x17c4E6453cC49aAaaEACA894e6A9683e00000005' }
+
+Address.extract.crossAccountIdFromObject('yGJMj5z32ssBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL')
+// throws the error 
+
+Address.extract.crossAccountIdFromObject('object') // throws the error
+Address.extract.crossAccountIdFromObject(10) // throws the error
+Address.extract.crossAccountIdFromObject([]) // throws the error
+```
+
+#### crossAccountIdFromObjectNormalized
+
+The method accepts an address or an address object, and converts it to a Cross Account Id object with the normalized format. The method throws an error if an address is invalid.
+
+``` ts
+crossAccountIdFromObjectNormalized: (obj: any) => CrossAccountId
+```
+
+Examples: 
+
+``` ts
+Address.extract.crossAccountIdFromObjectNormalized( '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ')
+// { Substrate: '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ' }
+
+Address.extract.crossAccountIdFromObjectNormalized('yGJMj5z32dpBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL')
+// { Substrate: '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ' }
+
+Address.extract.crossAccountIdFromObjectNormalized({Ethereum: '0x17c4E6453cC49aAaaeaca894e6A9683e00000005'})
+// { Ethereum: '0x17c4E6453cC49aAaaEACA894e6A9683e00000005' }
+
+Address.extract.crossAccountIdFromObjectNormalized('yGJMj5z32ssBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL')
+// throws the error
+
+Address.extract.crossAccountIdFromObjectNormalized('object') // throws the error
+Address.extract.crossAccountIdFromObjectNormalized(10) // throws the error
+Address.extract.crossAccountIdFromObjectNormalized([]) // throws the error
 ```
 
 ## mirror
 
-The object provides the methods for converting an address to a mirror.
+The object provides the methods for converting a Substrate address to an Ethereum mirror and vice versa.
 
 #### substrateToEthereum
 
-The method converts a Substrate address to an Ethereum mirror.
+The method converts a Substrate address to an Ethereum mirror. The second optional parameter allows specifying whether it is needed to validate checksum. Checksum is a part of a Substrate address along with prefix and public key. 
 
 ``` ts
-try {
-  const result = Address.mirror.substrateToEthereum('yGJMj5z32dpBUigGVFddtC382Ti3FNVSKyfgi87UF7f786MJL')
-  console.log(result)
-} catch (e) {
-  console.log(e.message)
-}
-// output: Invalid decoded address checksum
+substrateToEthereum: (address: string, ignoreChecksum?: boolean | undefined) => string
+```
 
-const result = Address.mirror.substrateToEthereum('yGJMj5z32dpBUigGVFddtC382Ti3FNVSKyfgi87UF7f786MJL')
-// result = '0xf8cC75F76d46c3b1c5F270Fe06c8FFdeAB8E5eaB'
+Examples: 
+
+``` ts
+Address.mirror.substrateToEthereum('yGJMj5z32dpBUigGVFddtC382Ti3FNVSKyfgi87UF7f786MJL')
+// '0xf8cC75F76d46c3b1c5F270Fe06c8FFdeAB8E5eaB'
+
+Address.mirror.substrateToEthereum('5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ')
+// '0xf8cC75F76d46c3b1c5F270Fe06c8FFdeAB8E5eaB'
+
+Address.mirror.substrateToEthereum('yGJMj5z32dpBUigGVFddtC382Ti3FNVSKyfgi87UF7f786MJL')
+// throws the error
+
+Address.mirror.substrateToEthereum('0x17c4E6453Cc49AAAaEACa894E6a9683e00000005')
+// throws the error
+
+Address.mirror.substrateToEthereum('address') // throws the error
+Address.mirror.substrateToEthereum(101) // throws the error
+Address.mirror.substrateToEthereum([]) // throws the error
 ```
 
 #### ethereumToSubstrate
 
-This method converts an Ethereum address to a Substrate mirror. It throws an exception if a passed parameter is invalid.
+This method converts an Ethereum mirror address to a Substrate address. It throws an error if a passed parameter is invalid.
+
+As the second optional parameter, you can pass the SS58 format for encoding. The default value is 42.
 
 ``` ts
-try {
-  const result = Address.mirror.ethereumToSubstrate('0x17c4E6453Cc49AAAaEACa894E6a9683e0005')
-  console.log(result)
-} catch (e) {
-  console.log(e.message)
-}
-// output: address "0x17c4E6453Cc49AAAaEACa894E6a9683e0005" is not valid ethereum address
-
-const result = Address.mirror.ethereumToSubstrate('0x17c4E6453Cc49AAAaEACa894E6a9683e00000005')
-// result = '5Fp3dxhLyxkzrGE6Niqdvfy5B35duX7PcLqPpwJKaYE2bHah'
+ethereumToSubstrate: (evmAddress: string, ss58Format?: number) => string
 ```
 
-## normalize
+Examples: 
+
+``` ts
+Address.mirror.ethereumToSubstrate('0x17c4E6453Cc49AAAaEACa894E6a9683e00000005')
+// '5Fp3dxhLyxkzrGE6Niqdvfy5B35duX7PcLqPpwJKaYE2bHah'
+
+Address.mirror.ethereumToSubstrate('0x17c4E6453Cc49AAAaEACa894E6a9683e00000005', 2)
+// GKfJH3DcKmvbv3Y9RegpdL5KdMsiBva4ig9DbaH4LSXLbzS
+
+Address.mirror.ethereumToSubstrate('0x17c4E6453Cc49AAAaEACa894E6a9683e0005')
+// throws the error
+
+Address.mirror.ethereumToSubstrate('yGJMj5z32dpBUigGVFddtC382Ti3FNVSKyfgi87UF7f786MJL')
+// throws the error
+
+Address.mirror.ethereumToSubstrate('address') // throws the error
+Address.mirror.ethereumToSubstrate(5) // throws the error
+Address.mirror.ethereumToSubstrate([]) // throws the error
+```
+
+### normalize
 
 The object provides the methods for normalizing addresses.
 
 #### substrateAddress
 
-The method converts a Substrate address to a normalized format. The method throws an exception if conversion fails.
+The method converts a Substrate address to a normalized format (by default). However, you can use the second optional parameter to convert an address to a format with needed prefix.
+
+The method throws an error if conversion fails.
 
 ``` ts
-try {
-  const result = Address.normalize.substrateAddress('yGJMj5z32dpBUigGVFgatC772Ti3FNVSKyfgi87UF7f786MJL')
-  console.log(result)
-} catch (e) {
-  console.log(e.message)
-}
-// output: Invalid decoded address checksum
-
-const result = Address.normalize.substrateAddress('yGJMj5z32dpBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL')
-// result = '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ'
+substrateAddress: (address: string, prefix?: number) => string
 ```
 
-#### [ethereumAddress]()
-
-The method
+Examples: 
 
 ``` ts
-try {
-  const result = Address.normalize.ethereumAddress('yGJMj5z32dpBUigGVFgatC772Ti3FNVSKyfgi87UF7f786MJL')
-  console.log(result)
-} catch (e) {
-  console.log(e.message)
-}
-// output: address "yGJMj5z32dpBUigGVFgatC772Ti3FNVSKyfgi87UF7f786MJL" is not valid ethereum address
+Address.normalize.substrateAddress('yGJMj5z32dpBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL'
+// '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ'
 
-const result = Address.normalize.ethereumAddress('0x17c4E6453Cc49AAAaEACa894E6a9683e00000005')
-// result = '0x17c4E6453cC49aAaaEACA894e6A9683e00000005'
+Address.normalize.substrateAddress('5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ', 255)
+// 'yGJMj5z32dpBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL'
+
+address.normalize.substrateAddress('yGJMj5z32dpBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL', 255)
+// 'yGJMj5z32dpBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL'
+
+address.normalize.substrateAddress('yGJMj5z32dpBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL', 7391)
+// 'unk9GwxLcJ7VHE75RgDYuRjuewZBGWHWvwgdVMSN3pPz9bY52'
+
+Address.normalize.substrateAddress('yGJMj5z32dpBUigGVFgatC772Ti3FNVSKyfgi87UF7f786MJL')
+// throws the error
+
+Address.normalize.substrateAddress('address') // throws the error
+Address.normalize.substrateAddress(101) // throws the error
+Address.normalize.substrateAddress([]) // throws the error
 ```
 
-## compare
+#### ethereumAddress
 
-The object provides the method for comparing addresses.
+The method normalizes an Ethereum address (capitalizes letters). 
+
+``` ts
+ethereumAddress: (address: string) => string
+```
+
+Examples: 
+
+``` ts
+Address.normalize.ethereumAddress('0x17c4E6453Cc49AAAaEACa894E6a9683e00000005')
+// '0x17c4E6453cC49aAaaEACA894e6A9683e00000005'
+
+Address.normalize.ethereumAddress('0x17c4E6453Cc49aaaaeaCa894E6a9683e00000005')
+// '0x17c4E6453cC49aAaaEACA894e6A9683e00000005'
+
+Address.normalize.ethereumAddress('yGJMj5z32dpBUigGVFgatC772Ti3FNVSKyfgi87UF7f786MJL')
+// throws the error
+
+Address.normalize.ethereumAddress('address') // throws the error
+Address.normalize.ethereumAddress(100) // throws the error
+Address.normalize.ethereumAddress([]) // throws the error
+```
+
+### compare
+
+The object provides the method for comparing addresses and methods return `true` or `false` depending on whether the addresses are equal. The methods never throws an error.
 
 #### ethereumAddresses
 
-The method compare two Ethereum addresses and return `true` or `false` depending on whether they are equal.
+The method compare two Ethereum addresses. 
+
+``` ts 
+ethereumAddresses: (address1: string | object | {
+  Ethereum: string;
+}, address2: string | object | {
+  Ethereum: string;
+}) => boolean
+```
+ 
+Examples: 
 
 ``` ts
-const result = Address.compare.ethereumAddresses('0x17c4E6453Cc49AAAaEACa894E6a9683e00000005','0x17c4E6453Cc49AAAaEACa894E6a9683e00000005')
-// result = true
-const result = Address.compare.ethereumAddresses('0x17c4E6453Cc49AAAaEACa894E6a9683e00000005','0x17c4E6454Cc49AAAaEACa894E6a9683e00000005')
-// result = false
+Address.compare.ethereumAddresses('0x17c4E6453Cc49AAAaEACa894E6a9683e00000005','0x17c4E6453Cc49AAAaEACa894E6a9683e00000005')
+// true
+
+Address.compare.ethereumAddresses('0x17c4E6453Cc49aaaaeaca894E6a9683e00000005','0x17c4E6453Cc49AAAaEACa894E6a9683e00000005')
+// true
+
+Address.compare.ethereumAddresses('0x17c4E6453Cc49AAAaEACa894E6a9683e00000005','0x17c4E6454Cc49AAAaEACa894E6a9683e00000005')
+// false
+
+Address.compare.ethereumAddresses('5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ', '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ')
+// false (for equal Substrate addresses)
+
+Address.compare.ethereumAddresses(5, '0x17c4E6453Cc49AAAaEACa894E6a9683e00000005') // false 
+Address.compare.ethereumAddresses(5, 2) // false 
+Address.compare.ethereumAddresses('address', '0x17c4E6453Cc49AAAaEACa894E6a9683e00000005') // false 
+Address.compare.ethereumAddresses(5, 'address') // false
+Address.compare.ethereumAddresses(5, []) // false
+Address.compare.ethereumAddresses([], 'address') // false
 ```
 
 #### substrateAddresses
 
-The method compare two Substrate addresses and return `true` or `false` depending on whether they are equal.
+The method compares two Substrate addresses.
 
 ``` ts
-const result = Address.compare.substrateAddresses('yGJMj5z32dpBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL','5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ
-// result = true
-const result = Address.compare.substrateAddresses('5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCCD','5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ')
-// result = false
+substrateAddresses: (address1: string | object | {
+  Substrate: string;
+}, address2: string | object | {
+  Substrate: string;
+}) => boolean
+```
+
+Examples: 
+
+``` ts
+Address.compare.substrateAddresses('5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ', '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ')
+// true
+
+Address.compare.substrateAddresses('yGJMj5z32dpBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL','5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ
+// true
+
+Address.compare.substrateAddresses('5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCCD','5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ')
+// false
+
+Address.compare.substrateAddresses('0x17c4E6453Cc49AAAaEACa894E6a9683e00000005', '0x17c4E6453Cc49AAAaEACa894E6a9683e00000005
+// false (for identical Ethereum addresses)
+
+Address.compare.substrateAddresses('5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCCD',2)
+// false 
+
+Address.compare.substrateAddresses(5,2) // false 
+Address.compare.substrateAddresses('address', '2') // false 
+Address.compare.substrateAddresses([],2) // false 
+Address.compare.substrateAddresses([],'address') // false 
 ```
