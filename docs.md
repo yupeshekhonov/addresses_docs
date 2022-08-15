@@ -22,7 +22,7 @@ ESM build has imports for tree shaking in modern building environments (webpack,
 
 ## Contents
 
-Address constists some useful utilities for substrate and ethereum addresses processing and conversion
+Address consists some useful utilities for substrate and ethereum addresses processing and conversion
 - **constants**: ethereum addresses for static smart contracts and address prefixes
 - **is**: set of functions checking whether passed param is substrate address, ethereum address, nested address, etc...
 - **validate**: set of validators, i.e. functions throwing an error when passed param is not a valid substrate address, ethereum address, nested address, etc...
@@ -30,7 +30,7 @@ Address constists some useful utilities for substrate and ethereum addresses pro
 - **nesting**: converters of {collectionId, tokenId} <-> nested ethereum address
 - **to**: converters to CrossAccountId (boxed substrate/ethereum address) and other common converters
 - **extract**: extractors of addresses with from CrossAccountId
-- **mirror**: converters of subtrate and ethereum mirrors
+- **mirror**: converters of substrate and ethereum mirrors
 - **normalize**: address normalizers (substrate to 42 prefix and ethereum capitalizer)
 - **compare**: address comparators
 - **substrate**: substrate address helpers
@@ -153,85 +153,93 @@ Address.is.collectionId('0x17c4e6453cc49aaaaeaca894e6d9683e00000001') // false /
 Address.is.collectionId([]) // false
 ```
 
-#### [tokenId]()
+#### tokenId
 
-This method checks whether the specified number can be a token Id.
+This method checks whether the specified number is a valid token Id.
 
-``` ts 
-let result = Address.is.tokenId(11)
-// result = true
-result = Address.is.tokenId(-5)
-// result = false
-result = Address.is.tokenId('id')
-// result = false
+```ts
+tokenId: (tokenId: number) => boolean
 ```
 
-## validate
+Examples: 
 
-This object provides methods for checking whether an address or Id is valid.
+``` ts 
+Address.is.tokenId(11) //  true
+Address.is.tokenId(111) //  true
+Address.is.collectionId(0xffffffff) //  true
+Address.is.tokenId(-5) //  false
+Address.is.tokenId('id') // false
+Address.is.collectionId('0x17c4e6453cc49aaaaeaca894e6d9683e00000001') // false
+Address.is.tokenId([]]) // false
+```
+
+### validate
+
+This object provides methods for checking whether some address meets the expectations. The difference from the [is](#is) object is that this method throws an error when the address cannot be checked. If the address is correct, the methods return `true`.
 
 #### substrateAddress
 
-This method checks whether the address is a valid Substrate Address.  The method returns `true` when this is so, and throws an exception when the validation fails.
+This method checks whether the address is a valid Substrate Address. 
 
 ``` ts
-try {
-   const result = Address.validate.substrateAddress('5HgvUDiRm5yjRSrrG9B6q6km7aazkXMxvFLHPZpA13pmwCJQ')
-} catch (e) {
-   console.log(e.message)
-}
-// output: Invalid decoded address checksum
-
-
-const result = Address.validate.substrateAddress('5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ')
-// result = true
+substrateAddress: (address: string) => boolean
 ```
 
-#### [tokenId]()
+Examples: 
 
-This method checks whether the specified number is a valid token Id. The method returns `true` when this is so, and throws an exception when the validation fails.
+``` ts
+Address.validate.substrateAddress('5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ') 
+// true
 
-``` ts 
-try {
-  const result = Address.validate.tokenId(-5)
-} catch (e) {
-  console.log(e.message)
+Address.validate.substrateAddress('5HgvUDiRm5yjRSrrG9B6q6km7aazkXMxvFLHPZpA13pmwCJQ')
+// throws the error (Invalid decoded address checksum)
 
-
-// output: collectionId should be a number between 0 and 0xffffffff
-const result = Address.validate.tokenId(11)
-// result = true
-```
-
-#### nestingAddress
-
-This method checks whether a nested NFT is located by the Address. The method returns `true` when this is so, and throws an exception when the validation fails.
-
-``` ts 
-try {
-   let res = Address.validate.nestingAddress('5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ')
-} catch (e) {
-   console.log(e.message)
-}
-// output: address 5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ is not a nesting address
-
+Address.validate.substrateAddress('address') // throws the error 
+Address.validate.substrateAddress(101) // throws the error 
+Address.validate.substrateAddress([]) // throws the error 
 ```
 
 #### ethereumAddress
 
-This method checks whether an address is a valid Ethereum Address. The method returns `true` when this is so, and throws an exception when the validation fails.
+This method checks whether an address is a valid Ethereum Address. 
+
+``` ts
+ethereumAddress: (address: string) => boolean
+```
+
+Examples: 
 
 ``` ts 
-try {
-  const result = Address.validate.ethereumAddress('0x34055Awqa8Cd2a82b656A3605AB058fB25E943A1')
-  console.log(result)
-} catch (e) {
-  console.log(e.message)
-}
-// output: address "0x34055Awqa8Cd2a82b656A3605AB058fB25E943A1" is not valid ethereum address
+Address.validate.ethereumAddress('0x34097A6Aa8Cd2a82b656A3605AB058fB25E943A1') // true 
 
-const result = Address.validate.ethereumAddress('0x34097A6Aa8Cd2a82b656A3605AB058fB25E943A1')
-// result = true 
+Address.validate.ethereumAddress('0x34055Awqa8Cd2a82b656A3605AB058fB25E943A1')
+// throws the error (address "0x34055Awqa8Cd2a82b656A3605AB058fB25E943A1" is not valid ethereum address
+
+Address.validate.ethereumAddress('address') // throws the error 
+
+Address.validate.ethereumAddress(101) // throws the error 
+
+Address.validate.ethereumAddress([]) // throws the error 
+```
+
+#### nestingAddress
+
+This method checks whether an address is a valid nesting address (input address capitalization doesn't matter).
+
+``` ts 
+nestingAddress: (address: string) => boolean
+```
+
+Examples: 
+
+``` ts 
+Address.validate.nestingAddress('0xF8238Ccfff8Ed887463Fd5E00000007f000000fe') // true
+Address.validate.nestingAddress('0xf8238ccfff8ed887463fd5e00000007f000000fe') // true
+Address.validate.nestingAddress('0x17C4e6453cC49AAaaEaCA894E6D9683e00000001')  // throws the error
+Address.validate.nestingAddress('0x34055awqa8cd2a82b656a3605ab058fb25e943a')   // throws the error
+Address.validate.nestingAddress('123') // throws the error
+Address.validate.nestingAddress('5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ') // throws the error
+Address.validate.nestingAddress([]) // throws the error
 ```
 
 #### collectionId
@@ -239,96 +247,143 @@ const result = Address.validate.ethereumAddress('0x34097A6Aa8Cd2a82b656A3605AB05
 This method checks whether a number is a token Id. The method returns `true` when this is so, and throws an exception when the validation fails.
 
 ``` ts
-try {
-  const result = Address.validate.collectionId(-51)
-  console.log(result)
-} catch (e) {
-  console.log(e.message)
-}
-// output: collectionId should be a number between 0 and 0xffffffff
-
-const result = Address.validate.collectionId(5)
-// result = true
+collectionId: (collectionId: number) => boolean
 ```
 
-## collection
+Examples: 
 
-This object provides methods for checking links between addresses and Ids in both directions.
+``` ts
+Address.validate.collectionId(5) // true
+Address.validate.collectionId(105) // true/
+Address.is.collectionId(0xffffffff) // true
+Address.is.collectionId(0) // throws the error
+Address.is.collectionId(0xffffffff + 1) // throws the error (out of range [1, 0xffffffff])
+Address.is.collectionId(-5) // throws the error
+Address.is.collectionId('id') // throws the error
+Address.is.collectionId([]) // throws the error
+```
+
+#### tokenId
+
+This method checks whether the specified number is a valid token Id. 
+
+``` ts 
+tokenId: (tokenId: number) => boolean
+```
+
+Examples: 
+
+``` ts 
+Address.is.tokenId(11) //  true
+Address.is.tokenId(111) //  true
+Address.is.collectionId(0xffffffff) //  true
+Address.is.tokenId(-5) //  throws the error
+Address.is.tokenId('id') // throws the error
+Address.is.collectionId('0x17c4e6453cc49aaaaeaca894e6d9683e00000001') // throws the error
+Address.is.tokenId([]]) // throws the error
+```
+
+
+### collection
+
+This object provides methods for converting between addresses and Ids of a collection in both directions. The methods works with Ethereum addresses.
 
 #### idToAddress
 
 The method gets a collection address by its Id. Returns an address in the Ethereum format if Id is correct, and throws the error if this is not so.
 
 ``` ts
-try {
-  const result = Address.collection.idToAddress(-5)
-  console.log(result)
-} catch (e) {
-  console.log(e.message)
-}
-// output: collectionId should be a number between 0 and 0xffffffff
+idToAddress: (collectionId: number) => string | null
+```
 
-const result = Address.collection.idToAddress(5)
-// result = '0x17c4E6453Cc49AAAaEACa894E6d9683e00000005'
+Examples: 
+
+``` ts
+Address.collection.idToAddress(5) // '0x17c4E6453Cc49AAAaEACa894E6d9683e00000005'
+Address.collection.idToAddress(105) // '0x17c4e6453CC49aaaAEAcA894e6d9683E00000069'
+Address.collection.idToAddress(-5) // throws the error (collectionId should be a number between 0 and 0xffffffff)
+Address.collection.idToAddress('0x17c4e6453cc49aaaaeaca894e6d9683e00000001') // throws the error
+Address.collection.idToAddress('id') // throws the error
+Address.collection.idToAddress([]) // throws the error
 ```
 
 #### addressToId
 
-The method gets a collection Id by its Address. Returns an Id if an address is correct, and throws the error if this is not so.
-
+The method gets a collection Id by its address. Returns an Id if an address is correct, and throws the error if this is not so.
 
 ``` ts
-try {
-  const result = Address.collection.addressToId('0x17c4E6453Cc49AAAEACa894E6a9683e00000005')
-  console.log(result)
-} catch (e) {
-  console.log(e.message)
-}
-// output: address 0x17c4E6453Cc49AAAaEACa894E6a9683e00000005 is not a collection address
-
-const result = Address.collection.addressToId('0x17c4E6453Cc49AAAaEACa894E6d9683e00000005')
-// result = 5
+addressToId: (address: string) => number | null 
 ```
 
-## nesting
+Examples: 
 
-This object provides methods for checking the NFT nesting.
+``` ts
+Address.collection.addressToId('0x17c4E6453Cc49AAAaEACa894E6d9683e00000005') // 5
+Address.collection.addressToId('0x17c4e6453CC49aaaAEAcA894e6d9683E00000069') // 105
+
+Address.collection.addressToId('0x17c4E6453Cc49AAAEACa894E6a9683e00000005') 
+// throws the error (address 0x17c4E6453Cc49AAAaEACa894E6a9683e00000005 is not a collection address)
+
+Address.collection.addressToId('5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCCD')
+//throws the error
+
+Address.collection.addressToId('address') //throws the error
+Address.collection.addressToId(101) //throws the error
+Address.collection.addressToId([]) //throws the error
+```
+
+### nesting
+
+This object provides methods for converting nesting addresses to ids and vice versa. The methods work for Ethereum addresses.
 
 #### addressToIds
 
-The method gets a collectionId and a tokenId for nesting NFT by an Address. Returns Ids if an address is a nesting address, and throws the error if this is not so.
+The method gets a collectionId and a tokenId for by an address. Returns Ids if an address is a nesting address, and throws the error if this is not so.
 
 ``` ts
-try {
-  const result = Address.nesting.addressToIds('0x17c4E6453Cc49AAAaEACa894E6a9683e00000005')
-  console.log(result)
-} catch (e) {
-  console.log(e.message)
+addressToIds: (address: string) => {
+   collectionId: number;
+   tokenId: number;
 }
-// output: address 0x17c4E6453Cc49AAAaEACa894E6a9683e00000005 is not a nesting address
+```
 
-const result = Address.nesting.addressToIds('0x17c4E6453Cc49AAAaEACa894E6d9683e00000005')
-// result = {collectionId: 5, tokenId: 1}
+Examples:
+
+``` ts
+Address.nesting.addressToIds('0x17c4E6453Cc49AAAaEACa894E6d9683e00000005')
+// {collectionId: 5, tokenId: 1}
+
+Address.nesting.addressToIds('0x17c4E6453Cc49AAAaEACa894E6a9683e00000005')
+// throws the error (address 0x17c4E6453Cc49AAAaEACa894E6a9683e00000005 is not a nesting addresst)
+
+Address.nesting.addressToIds('5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ') // throws the error
+Address.nesting.addressToIds('address') // throws the error
+Address.nesting.addressToIds(102) // throws the error
+Address.nesting.addressToIds([]) // throws the error
 ```
 
 #### idsToAddress
 
-The method gets a nesting address by the collection and token Ids.
+The method gets a nesting address by the collection and token ids.
 
 ``` ts
-try {
-  const result = Address.nesting.idsToAddress(-1,5)
-  console.log(result)
-} catch (e) {
-  console.log(e.message)
-}
-// output: collectionId should be a number between 0 and 0xffffffff
-
-const result = Address.nesting.idsToAddress(10,5)
-// result = '0xf8238CCFff8ED887463fD5E00000000500000001'
+idsToAddress: (collectionId: number, tokenId: number) => string
 ```
 
-## to
+Examples: 
+
+``` ts
+Address.nesting.idsToAddress(10, 5) // '0xf8238CCFff8ED887463fD5E00000000500000001'
+Address.nesting.idsToAddress(101, 50) // '0xf8238ccFfF8ed887463Fd5E00000006500000032'
+Address.nesting.idsToAddress(-1, 5) // throws the error (collectionId should be a number between 0 and 0xffffffff)
+Address.nesting.idsToAddress(-10, -15) // throws the error
+Address.nesting.idsToAddress('id', -15) // throws the error
+Address.nesting.idsToAddress('id', 'id2') // throws the error
+Address.nesting.idsToAddress([],15) // throws the error
+Address.nesting.idsToAddress('id',[]) // throws the error
+```
+
+### to
 
 The object provides methods for converting addresses Substrate and Ethereum address to an object or to a normalized format (prefix 42)
 
