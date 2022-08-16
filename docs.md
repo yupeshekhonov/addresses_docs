@@ -68,6 +68,8 @@ substrateAddress: (address: string) => boolean
 Examples:
 ``` ts 
 Address.is.substrateAddress('5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ') // true
+Address.is.substrateAddress('yGJMj5z32dpBUigGVFgatC382Ti3FNVSKyfgi87UF7f786MJL') // true
+Address.is.substrateAddress('0x34055Awqa8Cd2a82b656A3605AB058fB25E943A1') // false
 Address.is.substrateAddress('123') // false
 Address.is.substrateAddress([]) // false
 ```
@@ -175,7 +177,7 @@ Address.is.tokenId([]]) // false
 
 #### crossAccountId 
 
-This method checks whether a passed argument is a valid Cross Account Id object. 
+This method checks whether a specified argument is a valid Cross Account Id object. 
 
 ``` ts
 crossAccountId: (obj: any) => obj is CrossAccountId
@@ -206,10 +208,36 @@ Address.is.crossAccountId([]) // false
 
 #### crossAccountIdUncapitalized
 
-? 
+The method checks whether a Cross Account Id object is passed with uncapitalized property.
 
 ``` ts
 crossAccountIdUncapitalized: (obj: any) => obj is CrossAccountIdUncapitalized
+```
+
+Examples: 
+
+``` ts
+Address.is.crossAccountIdUncapitalized({ ethereum: '0x17c4E6453Cc49AAAaEACa894E6a9683e00000005' })
+// true
+
+Address.is.crossAccountIdUncapitalized({ substrate: '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ' })
+// true
+
+Address.is.crossAccountIdUncapitalized({ Ethereum: '0x17c4E6453Cc49AAAaEACa894E6a9683e00000005' })
+// false
+
+Address.is.crossAccountIdUncapitalized({ Substrate: '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ' })
+// false
+
+Address.is.crossAccountIdUncapitalized({'0x17c4E6453Cc49AAAaEACa894E6a9683e00000005')
+// false
+
+Address.is.crossAccountIdUncapitalized('5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ')
+// false
+
+Address.is.crossAccountIdUncapitalized('address') // false
+Address.is.crossAccountIdUncapitalized(5) // false
+Address.is.crossAccountIdUncapitalized([]) // false
 ```
 
 #### substrateAddressObject
@@ -270,23 +298,64 @@ Address.is.ethereumAddressObject([]) // false
 
 #### substrateAddressObjectUncapitalized
 
-? 
+The method checks whether an argument is a valid Substrate object with uncapitalized property.
 
 ``` ts
 substrateAddressObjectUncapitalized: (obj: any) => obj is SubAddressObjUncapitalized
 ```
 
+Examples: 
+
+``` ts
+Address.is.substrateAddressObjectUncapitalized({ substrate: '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ' })
+// true
+
+Address.is.substrateAddressObjectUncapitalized({ Substrate: '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ' })
+// false
+
+Address.is.substrateAddressObjectUncapitalized({ substrate: '0x17c4E6453Cc49AAAaEACa894E6a9683e00000005' })
+// false
+
+Address.is.substrateAddressObjectUncapitalized('5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ') 
+// false
+
+Address.is.substrateAddressObjectUncapitalized('address') // false 
+Address.is.substrateAddressObjectUncapitalized(55) // false 
+Address.is.substrateAddressObjectUncapitalized([]) // false 
+```
+
 #### ethereumAddressObjectUncapitalized
 
-? 
+The method checks whether an argument is a valid Ethereum object with uncapitalized property. 
 
 ``` ts
 ethereumAddressObjectUncapitalized: (obj: any) => obj is EthAddressObjUncapitalized
 ```
 
+Examples: 
+
+``` ts
+Address.is.ethereumAddressObjectUncapitalized({ ethereum: '0x17c4E6453Cc49AAAaEACa894E6a9683e00000005' })
+// true
+
+Address.is.ethereumAddressObjectUncapitalized({ ethereum: '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ' })
+// false
+
+Address.is.substrateAddressObjectUncapitalized({ Ethereum: '0x17c4E6453Cc49AAAaEACa894E6a9683e00000005' })
+// false
+
+Address.is.substrateAddressObjectUncapitalized({ substrate: '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ' })
+// false
+
+Address.is.substrateAddressObjectUncapitalized('0x17c4E6453Cc49AAAaEACa894E6a9683e00000005') // false
+Address.is.substrateAddressObjectUncapitalized('address') // true
+Address.is.substrateAddressObjectUncapitalized(55) // true
+Address.is.substrateAddressObjectUncapitalized([]) // true
+```
+
 ### validate
 
-This object provides methods for checking whether some address meets the expectations. The difference from the [is](#is) object is that this method throws an error when the address cannot be checked. If the address is correct, the methods return `true`.
+This object provides methods for checking whether some address meets the expectations. The difference from the [is](#is) object is that this method throws an error when the address cannot be checked. If the address is correct, the method returns `true`.
 
 #### substrateAddress
 
@@ -355,7 +424,7 @@ Address.validate.nestingAddress([]) // throws the error
 
 #### collectionId
 
-This method checks whether a number is a token id. The method returns `true` when this is so, and throws an error when the validation fails.
+This method checks whether a number is a token id. 
 
 ``` ts
 collectionId: (collectionId: number) => boolean
@@ -376,7 +445,7 @@ Address.validate.collectionId([]) // throws the error
 
 #### tokenId
 
-This method checks whether the specified number is a valid token id. 
+This method checks whether the specified number is a valid token id.  
 
 ``` ts 
 tokenId: (tokenId: number) => boolean
@@ -490,8 +559,8 @@ Address.nesting.idsToAddress(-1, 5) // throws the error (collectionId should be 
 Address.nesting.idsToAddress(-10, -15) // throws the error
 Address.nesting.idsToAddress('id', -15) // throws the error
 Address.nesting.idsToAddress('id', 'id2') // throws the error
-Address.nesting.idsToAddress([],15) // throws the error
-Address.nesting.idsToAddress('id',[]) // throws the error
+Address.nesting.idsToAddress([], 15) // throws the error
+Address.nesting.idsToAddress('id', []) // throws the error
 ```
 
 ### to
@@ -697,7 +766,7 @@ Address.extract.crossAccountIdFromObjectNormalized(10) // throws the error
 Address.extract.crossAccountIdFromObjectNormalized([]) // throws the error
 ```
 
-## mirror
+### mirror
 
 The object provides the methods for converting a Substrate address to an Ethereum mirror and vice versa.
 
