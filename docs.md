@@ -419,7 +419,7 @@ This object provides methods for converting between addresses and Ids of a colle
 The method gets a collection address by its id. Returns an address in the Ethereum format if id is correct, and throws the error if this is not so.
 
 ``` ts
-idToAddress: (collectionId: number) => string | null
+idToAddress: (collectionId: number) => string 
 ```
 
 Examples: 
@@ -441,7 +441,7 @@ Address.collection.idToAddress([]) // throws the error
 The method gets a collection id by its address. Returns an id if an address is correct, and throws the error if this is not so.
 
 ``` ts
-addressToId: (address: string) => number | null 
+addressToId: (address: string) => number
 ```
 
 Examples: 
