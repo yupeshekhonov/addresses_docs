@@ -186,20 +186,12 @@ crossAccountId: (obj: any) => obj is CrossAccountId
 Examples: 
 
 ``` ts
-Address.is.crossAccountId({ Ethereum: '0x17c4E6453cC49aAaaEACA894e6A9683e00000005' })
-// true
-
-Address.is.crossAccountId({ Substrate: '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ' })
-// true
-
-Address.is.crossAccountId({ Substrate: '5HgvUDiRm5yjRSrrF9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ' })
-// false
-
-Address.is.crossAccountId({ Ethereum: '5HgvUDiRm5yjRSrrF9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ' })
-// false
-
-Address.is.crossAccountId('5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ')
-// false (because it is a string even with a valid address)
+Address.is.crossAccountId({ Ethereum: '0x17c4E6453cC49aAaaEACA894e6A9683e00000005' }) // true
+Address.is.crossAccountId({ Substrate: '5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ' }) // true
+Address.is.crossAccountId({ Substrate: '5HgvUDiRm5yjRSrrF9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ' }) // false
+Address.is.crossAccountId({ Ethereum: '5HgvUDiRm5yjRSrrF9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ' }) // false
+Address.is.crossAccountId('5HgvUDiRm5yjRSrrG9B6q6km7KLzkXMxvFLHPZpA13pmwCJQ') // false 
+// because it's not a object but a string even though it's a valid address
 
 Address.is.crossAccountId('5') // false
 Address.is.crossAccountId(110) // false
