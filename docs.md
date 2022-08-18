@@ -5,7 +5,7 @@
 Import the `Address` object from the package.
 
 ``` ts 
-import {UniqueUtils} from "@unique-nft/api"
+import {UniqueUtils} from '@unique-nft/api'
 
 const Address = UniqueUtils.Address
 ```
